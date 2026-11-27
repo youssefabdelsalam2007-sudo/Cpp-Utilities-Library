@@ -69,7 +69,7 @@ long long NumberOfSecondsInaYear(int Year)
 
     return NumberOfMinutsInaYear(Year) * 60LL;
 }
-int NumberOfDaysInaMonth(int Year, int Month)
+int NumberOfDaysInaMonth_TheLastDayInMonth(int Year, int Month)
 {
     if (Month < 1 || Month > 12)
     {
@@ -90,7 +90,7 @@ int NumberOfDaysInaMonth(int Year, int Month)
 }
 int NumberOfHoursInaMonth(int Year, int Month)
 {
-    return NumberOfDaysInaMonth(Year, Month) * 24;
+    return NumberOfDaysInaMonth_TheLastDayInMonth(Year, Month) * 24;
 }
 int NumberOfMinutesInaMonth(int Year, int Month)
 {
@@ -120,7 +120,7 @@ void PrintMonthCalendar(int Y, int M)
 {
 
     int FirstDay = GetDayFromWeak(1, M, Y); // 0 = Sunday
-    int Days = NumberOfDaysInaMonth(Y, M);
+    int Days = NumberOfDaysInaMonth_TheLastDayInMonth(Y, M);
     int counter = 1;
 
     string ArrMonth[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
@@ -213,8 +213,16 @@ bool IsTheLastMonthInYear(int Month)
     return (Month == 12);
 }
 
-void WhatIsTheNewDateIfAddedNumberOfDayes(int day, int month, int year, int add)
+// Forward declaration: because the next function calls it before it is defined
+void WhatIsTheNewDateIfSubtractedNumberOfDayes(int day, int month, int year, long long subtract);
+
+void WhatIsTheNewDateIfAddedNumberOfDayes(int day, int month, int year, long long add)
 {
+    if (add < 0)
+    {
+        WhatIsTheNewDateIfSubtractedNumberOfDayes(day, month, year, -1 * add);
+        return;
+    }
 
     while (add != 0)
     {
@@ -255,7 +263,7 @@ void WhichDateIsHeighsitFirstApproach(int DayDate1, int MonthDate1, int YearDate
 
         cout << "The Date 2 is the Heighist : ";
     }
-    else if (YearDate1 = YearDate2)
+    else
     {
         if (MonthDate1 > MonthDate2)
         {
@@ -265,7 +273,7 @@ void WhichDateIsHeighsitFirstApproach(int DayDate1, int MonthDate1, int YearDate
         {
             cout << "The Date 2 is the Heighist : ";
         }
-        else if (MonthDate1 = MonthDate2)
+        else
         {
             if (DayDate1 > DayDate2)
             {
@@ -363,7 +371,7 @@ int TheDifferenceBetweenTwoDates(int DayDate1, int MonthDate1, int YearDate1, in
 int CalculateAgeInDays(int BirthDay, int BirthMonth, int BirthYear)
 {
     time_t t = time(0);
-    tm* CurrentDate = localtime(&t);
+    tm *CurrentDate = localtime(&t);
 
     int CurrentDay = CurrentDate->tm_mday;
     int CurrentMonth = CurrentDate->tm_mon + 1;
@@ -371,16 +379,15 @@ int CalculateAgeInDays(int BirthDay, int BirthMonth, int BirthYear)
 
     return TheDifferenceBetweenTwoDates(
         BirthDay, BirthMonth, BirthYear,
-        CurrentDay, CurrentMonth, CurrentYear
-    );
+        CurrentDay, CurrentMonth, CurrentYear);
 }
 int TheDifferenceBetweenTwoDatesSigned(
     int DayDate1, int MonthDate1, int YearDate1,
     int DayDate2, int MonthDate2, int YearDate2)
 {
     if (IsDate1BeforeDate2(
-        DayDate1, MonthDate1, YearDate1,
-        DayDate2, MonthDate2, YearDate2))
+            DayDate1, MonthDate1, YearDate1,
+            DayDate2, MonthDate2, YearDate2))
     {
         return TheDifferenceBetweenTwoDates(
             DayDate1, MonthDate1, YearDate1,
@@ -388,8 +395,8 @@ int TheDifferenceBetweenTwoDatesSigned(
     }
 
     if (IsDate1BeforeDate2(
-        DayDate2, MonthDate2, YearDate2,
-        DayDate1, MonthDate1, YearDate1))
+            DayDate2, MonthDate2, YearDate2,
+            DayDate1, MonthDate1, YearDate1))
     {
         return -TheDifferenceBetweenTwoDates(
             DayDate2, MonthDate2, YearDate2,
@@ -397,4 +404,297 @@ int TheDifferenceBetweenTwoDatesSigned(
     }
 
     return 0;
+}
+void IncreaseDateByOneDay(int day, int month, int year)
+{
+    WhatIsTheNewDateIfAddedNumberOfDayes(day, month, year, 1);
+}
+void IncreaseDateDateByOneWeaks(int day, int month, int year)
+{
+    WhatIsTheNewDateIfAddedNumberOfDayes(day, month, year, 7);
+}
+void IncreaseDateDateByXweaks(int day, int month, int year, int weak)
+{
+    WhatIsTheNewDateIfAddedNumberOfDayes(day, month, year, 7 * weak);
+}
+void IncreaseDateDateByOneMonth(int day, int month, int year)
+{
+    WhatIsTheNewDateIfAddedNumberOfDayes(day, month, year, 30);
+}
+void IncreaseDateDateByXMonth(int day, int month, int year, int Month)
+{
+    WhatIsTheNewDateIfAddedNumberOfDayes(day, month, year, 30 * Month);
+}
+void IncreaseDateDateByOneYear(int day, int month, int year)
+{
+    WhatIsTheNewDateIfAddedNumberOfDayes(day, month, year, 365);
+}
+
+void IncreaseDateDateByXYear(int day, int month, int year, int Year)
+{
+    WhatIsTheNewDateIfAddedNumberOfDayes(day, month, year, 365 * Year);
+}
+void IncreaseDateByOneDecade(int day, int month, int year)
+{
+    WhatIsTheNewDateIfAddedNumberOfDayes(day, month, year, 10 * 365);
+}
+void IncreaseDateDateByXDecade(int day, int month, int year, int Deacde)
+{
+    WhatIsTheNewDateIfAddedNumberOfDayes(day, month, year, 10 * 365 * Deacde);
+}
+void IncreaseDateByOneCentury(int day, int month, int year)
+{
+    WhatIsTheNewDateIfAddedNumberOfDayes(day, month, year, 100 * 365);
+}
+
+void IncreaseDateByXCentury(int day, int month, int year, int Century)
+{
+    WhatIsTheNewDateIfAddedNumberOfDayes(day, month, year, 100 * 365 * Century);
+}
+
+void WhatIsTheNewDateIfSubtractedNumberOfDayes(int day, int month, int year, long long subtract)
+{
+    if (subtract < 0)
+    {
+        WhatIsTheNewDateIfAddedNumberOfDayes(day, month, year, -1 * subtract);
+        return;
+    }
+
+    while (subtract != 0)
+    {
+        if (day == 1)
+        {
+            if (month == 1)
+            {
+                day = NumberOfDaysInaMonth_TheLastDayInMonth(year - 1, 12);
+                month = 12;
+                year -= 1;
+                subtract -= 1;
+            }
+            else
+            {
+                day = NumberOfDaysInaMonth_TheLastDayInMonth(year, month - 1);
+                month = month - 1;
+                subtract -= 1;
+            }
+        }
+        else
+        {
+            day -= 1;
+            subtract -= 1;
+        }
+    }
+    cout << "NewDate is : " << day << '/' << month << '/' << year << endl;
+}
+
+void DecreaseDateByOneDay(int day, int month, int year)
+{
+    WhatIsTheNewDateIfSubtractedNumberOfDayes(day, month, year, 1);
+}
+
+void DecreaseDateByOneWeek(int day, int month, int year)
+{
+    WhatIsTheNewDateIfSubtractedNumberOfDayes(day, month, year, 7);
+}
+
+void DecreaseDateByXWeeks(int day, int month, int year, int weeks)
+{
+    WhatIsTheNewDateIfSubtractedNumberOfDayes(day, month, year, 7 * weeks);
+}
+
+void DecreaseDateByOneMonth(int day, int month, int year)
+{
+    WhatIsTheNewDateIfSubtractedNumberOfDayes(day, month, year, 30);
+}
+
+void DecreaseDateByXMonths(int day, int month, int year, int months)
+{
+    WhatIsTheNewDateIfSubtractedNumberOfDayes(day, month, year, 30 * months);
+}
+
+void DecreaseDateByOneYear(int day, int month, int year)
+{
+    WhatIsTheNewDateIfSubtractedNumberOfDayes(day, month, year, 365);
+}
+
+void DecreaseDateByXYears(int day, int month, int year, int years)
+{
+    WhatIsTheNewDateIfSubtractedNumberOfDayes(day, month, year, 365 * years);
+}
+
+void DecreaseDateByOneDecade(int day, int month, int year)
+{
+    WhatIsTheNewDateIfSubtractedNumberOfDayes(day, month, year, 10 * 365);
+}
+
+void DecreaseDateByXDecades(int day, int month, int year, int decades)
+{
+    WhatIsTheNewDateIfSubtractedNumberOfDayes(day, month, year, 10 * 365 * decades);
+}
+
+void DecreaseDateByOneCentury(int day, int month, int year)
+{
+    WhatIsTheNewDateIfSubtractedNumberOfDayes(day, month, year, 100 * 365);
+}
+
+void DecreaseDateByXCenturies(int day, int month, int year, int centuries)
+{
+    WhatIsTheNewDateIfSubtractedNumberOfDayes(day, month, year, 100 * 365 * centuries);
+}
+
+int DayOfWeekOrder(int Day, int Month, int Year)
+{
+    return GetDayFromWeak(Day, Month, Year);
+}
+
+bool IsEndOfWeek(int Day, int Month, int Year)
+{
+    return DayOfWeekOrder(Day, Month, Year) == 6;
+}
+
+bool IsWeekEnd(int Day, int Month, int Year)
+{
+    int Order = DayOfWeekOrder(Day, Month, Year);
+    return (Order == 5 || Order == 6);
+}
+
+bool IsBusinessDay(int Day, int Month, int Year)
+{
+    return !IsWeekEnd(Day, Month, Year);
+}
+
+int DaysUntilTheEndOfWeek(int Day, int Month, int Year)
+{
+    return 6 - DayOfWeekOrder(Day, Month, Year);
+}
+
+int DaysUntilTheEndOfMonth(int Day, int Month, int Year)
+{
+    return NumberOfDaysInaMonth_TheLastDayInMonth(Year, Month) - Day + 1;
+}
+
+int DaysUntilTheEndOfYear(int Day, int Month, int Year)
+{
+    return NumberOfDaysInaYear(Year) - TotalDaysFromBeginingTheYear(Day, Month, Year) + 1;
+}
+
+int ActualVacationPeriod(int DayDate1, int MonthDate1, int YearDate1, int DayDate2, int MonthDate2, int YearDate2)
+{
+    if (!IsDate1BeforeDate2(DayDate1, MonthDate1, YearDate1, DayDate2, MonthDate2, YearDate2))
+    {
+        return 0;
+    }
+    int Differnce = 0;
+    while (IsDate1BeforeDate2(DayDate1, MonthDate1, YearDate1, DayDate2, MonthDate2, YearDate2))
+    {
+        if (IsTheEndDayInMonth(DayDate1, MonthDate1, YearDate1))
+        {
+            if (IsTheLastMonthInYear(MonthDate1))
+            {
+                if (IsWeekEnd(DayDate1, MonthDate1, YearDate1))
+                {
+                    DayDate1 = 1;
+                    MonthDate1 = 1;
+                    YearDate1++;
+                }
+                else
+                {
+                    DayDate1 = 1;
+                    MonthDate1 = 1;
+                    YearDate1++;
+                    Differnce++;
+                }
+            }
+
+            else
+            {
+                if (IsWeekEnd(DayDate1, MonthDate1, YearDate1))
+                {
+                    DayDate1 = 1;
+                    MonthDate1++;
+                }
+                else
+                {
+                    DayDate1 = 1;
+                    MonthDate1++;
+                    Differnce++;
+                }
+            }
+        }
+        else
+        {
+            if (IsWeekEnd(DayDate1, MonthDate1, YearDate1))
+            {
+                DayDate1++;
+            }
+
+            else
+            {
+                DayDate1++;
+                Differnce++;
+            }
+        }
+    }
+
+    return Differnce;
+}
+void VacationStarEnd(int day, int month, int year, int vacation)
+{
+    if (vacation <= 0)
+    {
+        return;
+    }
+    while (vacation != 0)
+    {
+
+        if (IsWeekEnd(day, month, year))
+        {
+
+            if (IsTheEndDayInMonth(day, month, year))
+            {
+                if (month == 12)
+                {
+                    day = 1;
+                    month = 1;
+                    year++;
+                }
+                else
+                {
+                    day = 1;
+                    month += 1;
+                }
+            }
+            else
+            {
+                day++;
+            }
+        }
+
+        else
+        {
+
+            if (IsTheEndDayInMonth(day, month, year))
+            {
+                if (month == 12)
+                {
+                    day = 1;
+                    month = 1;
+                    year++;
+                }
+                else
+                {
+                    day = 1;
+                    month += 1;
+                }
+            }
+            else
+            {
+                day++;
+            }
+
+            vacation -= 1;
+        }
+    }
+
+    cout << "return Date : " << GetDayName(GetDayFromWeak(day, month, year)) << ',' << day << "/" << month << "/" << year << endl;
 }

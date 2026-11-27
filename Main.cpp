@@ -9,5 +9,5 @@ using namespace std;
 
 int main()
 {
-cout<<TheDifferenceBetweenTwoDatesSigned(1,1,2022,25,3,2022);
+VacationStarEnd(1,1,2022,23);
 }
